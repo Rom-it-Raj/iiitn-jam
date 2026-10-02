@@ -1,0 +1,20 @@
+[gd_scene load_steps=7 format=3 uid="uid://s8v1e8atinsd"]
+
+[ext_resource type="PackedScene" uid="uid://bedph2ba55680" path="res://models/map/buildings_base_single.glb" id="1_pvunu"]
+[ext_resource type="Script" uid="uid://du45o85htetd1" path="res://scripts/map_sway.gd" id="2_ai5c8"]
+[ext_resource type="Material" uid="uid://cdj416fl15r3e" path="res://materials/baseRoad.tres" id="2_v5lqi"]
+[ext_resource type="Material" uid="uid://dnf5mqhs8cy2v" path="res://materials/building2.tres" id="4_76dm6"]
+[ext_resource type="Material" uid="uid://d3uxmpvxexjiv" path="res://materials/building.tres" id="5_xw0v3"]
+[ext_resource type="Material" uid="uid://drubomy8ibpgo" path="res://materials/rubble.tres" id="6_x73dy"]
+
+[node name="buildings_base_single" node_paths=PackedStringArray("map") instance=ExtResource("1_pvunu")]
+script = ExtResource("2_ai5c8")
+map = NodePath("layout2_004")
+frequecy = 5.0
+
+[node name="layout2_004" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+surface_material_override/0 = ExtResource("2_v5lqi")
+surface_material_override/1 = ExtResource("5_xw0v3")
+surface_material_override/2 = ExtResource("4_76dm6")
+surface_material_override/3 = ExtResource("6_x73dy")

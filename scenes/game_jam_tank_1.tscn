@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bbode067kcnfp"]
+
+[ext_resource type="PackedScene" uid="uid://bywn86m44juad" path="res://models/player/GameJamTank1.glb" id="1_5f4ve"]
+
+[node name="GameJamTank1" instance=ExtResource("1_5f4ve")]
+
+[node name="breech_001" parent="Hull/exit_005" index="1"]
+transform = Transform3D(0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0, 1, 0.72980034, 2.2638025, 0.0010606564)

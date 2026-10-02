@@ -1,0 +1,94 @@
+[gd_resource type="ShaderMaterial" load_steps=5 format=3 uid="uid://cdj416fl15r3e"]
+
+[ext_resource type="Texture2D" uid="uid://chdc20es5m121" path="res://models/map/buildings_base_single_baseRoad_Base_color.png" id="1_gxmff"]
+[ext_resource type="Texture2D" uid="uid://b0vktw6t73awl" path="res://models/map/buildings_base_single_baseRoad_Metallic-baseRoad_Roughness.png" id="2_qcp2w"]
+[ext_resource type="Texture2D" uid="uid://b00v2m6u8of7k" path="res://models/map/buildings_base_single_baseRoad_Normal_OpenGL.png" id="3_pr6wq"]
+
+[sub_resource type="Shader" id="Shader_gxmff"]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_disabled, diffuse_burley, specular_schlick_ggx;
+
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color, filter_linear_mipmap, repeat_enable;
+uniform ivec2 albedo_texture_size;
+uniform float point_size : hint_range(0.1, 128.0, 0.1);
+
+uniform float roughness : hint_range(0.0, 1.0);
+uniform sampler2D texture_metallic : hint_default_white, filter_linear_mipmap, repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_g, filter_linear_mipmap, repeat_enable;
+
+uniform float specular : hint_range(0.0, 1.0, 0.01);
+uniform float metallic : hint_range(0.0, 1.0, 0.01);
+
+uniform sampler2D texture_normal : hint_roughness_normal, filter_linear_mipmap, repeat_enable;
+uniform float normal_scale : hint_range(-16.0, 16.0);
+
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+//uniform vec3 uv1_scale = vec3(1.0);
+//uniform vec3 uv1_offset = vec3(0.0);
+
+// New uniforms for the wave effect
+uniform vec3 node_world_pos;
+uniform float wave_amplitude = 0.5; // How tall the wave is
+uniform float wave_frequency = 2.0; // How tight the waves are on the X axis
+uniform float wave_speed = 3.0;     // How fast it oscillates over time
+
+void vertex() {
+    UV = UV * uv1_scale.xy + uv1_offset.xy;
+
+    vec3 world_vertex = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+
+    float dist_x = (world_vertex.x - node_world_pos.x) * wave_frequency;
+
+    float wave = sin(dist_x) * sin(wave_speed * TIME);
+    VERTEX.z += wave * wave_amplitude;
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+
+	vec4 albedo_tex = texture(texture_albedo, base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+
+	float metallic_tex = dot(texture(texture_metallic, base_uv), metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	SPECULAR = specular;
+
+	vec4 roughness_texture_channel = vec4(0.0, 1.0, 0.0, 0.0);
+	float roughness_tex = dot(texture(texture_roughness, base_uv), roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+
+	// Normal Map: Enabled
+	NORMAL_MAP = texture(texture_normal, base_uv).rgb;
+	NORMAL_MAP_DEPTH = normal_scale;
+}
+"
+
+[resource]
+resource_name = "baseRoad"
+render_priority = 0
+shader = SubResource("Shader_gxmff")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/texture_albedo = ExtResource("1_gxmff")
+shader_parameter/albedo_texture_size = Vector2i(512, 512)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/texture_metallic = ExtResource("2_qcp2w")
+shader_parameter/metallic_texture_channel = Vector4(0, 0, 1, 0)
+shader_parameter/texture_roughness = ExtResource("2_qcp2w")
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 1.0
+shader_parameter/texture_normal = ExtResource("3_pr6wq")
+shader_parameter/normal_scale = 1.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/node_world_pos = Vector3(0, 0, 0)
+shader_parameter/wave_amplitude = 0.5
+shader_parameter/wave_frequency = 2.0
+shader_parameter/wave_speed = 3.0

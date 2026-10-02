@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://ddhqxslcs5xq8"]
+
+[ext_resource type="PackedScene" uid="uid://bywn86m44juad" path="res://models/player/GameJamTank1.glb" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://b7fjesn1vbmtf" path="res://scripts/player.gd" id="1_g2els"]
+[ext_resource type="Shader" uid="uid://l5180pjc4akk" path="res://shaders/pixeliser.gdshader" id="3_qhqgy"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dqkch"]
+render_priority = 0
+shader = ExtResource("3_qhqgy")
+shader_parameter/pixel_size = 4.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_g2els"]
+material = SubResource("ShaderMaterial_dqkch")
+orientation = 2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3vyb7"]
+size = Vector3(7, 1, 3)
+
+[node name="player" type="CharacterBody3D"]
+script = ExtResource("1_g2els")
+max_speed = 15.0
+deceleration = 40.0
+turn_speed = 0.7
+turn_smooth_accel = 0.6
+turn_smooth_deccel = 0.01
+
+[node name="GameJamTank1" parent="." instance=ExtResource("1_3vyb7")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="GameJamTank1"]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 1.5, 2.7, -1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="GameJamTank1/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+mesh = SubResource("PlaneMesh_g2els")
+
+[node name="RayCast3D" type="RayCast3D" parent="GameJamTank1"]
+transform = Transform3D(-4.3711385e-08, -1, -4.371139e-08, 1, -4.371139e-08, 4.371139e-08, -4.371139e-08, -4.371139e-08, 1, 0, 2.4, 0)
+target_position = Vector3(0, -50, 0)
+debug_shape_custom_color = Color(1, 0, 0, 1)
+debug_shape_thickness = 5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0.6, 0)
+shape = SubResource("BoxShape3D_3vyb7")

@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://4g3jc46mf7gj"]
+
+[ext_resource type="PackedScene" uid="uid://cslujxnirj4kn" path="res://scenes/map.tscn" id="1_yqjtg"]
+[ext_resource type="PackedScene" uid="uid://ddhqxslcs5xq8" path="res://scenes/player.tscn" id="2_lnu2h"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_yqjtg"]
+sky_top_color = Color(0.39319795, 5.354546e-07, 0.08246053, 1)
+sky_horizon_color = Color(0, 0, 0, 1)
+sky_curve = 0.4547149
+sky_cover_modulate = Color(0.3779188, 0.37791887, 0.37791884, 1)
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0, 0, 0, 1)
+ground_curve = 0.1600002
+
+[sub_resource type="Sky" id="Sky_lnu2h"]
+sky_material = SubResource("ProceduralSkyMaterial_yqjtg")
+
+[sub_resource type="Environment" id="Environment_lbhrr"]
+background_mode = 2
+sky = SubResource("Sky_lnu2h")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="game" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_lbhrr")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+light_color = Color(0.8977309, 0.7507901, 0.70679665, 1)
+shadow_enabled = true
+sky_mode = 1
+
+[node name="map" parent="." node_paths=PackedStringArray("character") instance=ExtResource("1_yqjtg")]
+character = NodePath("../player")
+
+[node name="player" parent="." instance=ExtResource("2_lnu2h")]
+transform = Transform3D(9.179391e-08, 0, 0.7, 0, 0.7, 0, -0.7, 0, 9.179391e-08, 24.800001, 2.6, -15.000002)
